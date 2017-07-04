@@ -18,6 +18,9 @@ public abstract class StringListener implements Callback {
 
     @Override
     public void onFailure(Call call, IOException e) {
+        if(e.getMessage() == null){
+            return;
+        }
         onFailure(e.getMessage());
     }
 
@@ -30,7 +33,6 @@ public abstract class StringListener implements Callback {
                         try {
                             return response.body().string();
                         } catch (IOException e) {
-                            e.printStackTrace();
                             return null;
                         }
                     }
@@ -44,7 +46,9 @@ public abstract class StringListener implements Callback {
 
                     @Override
                     public void onError(Throwable e) {
-                        onFailure(e.getMessage());
+                        if(e.getMessage() != null) {
+                            onFailure(e.getMessage());
+                        }
                     }
 
                     @Override
@@ -53,10 +57,10 @@ public abstract class StringListener implements Callback {
                             if(s!=null) {
                                 onSuccess(s);
                             }else{
-                                onFailure("request result is empty");
+                                onFailure("response data is empty");
                             }
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            onFailure("response data is empty");
                         }
                     }
                 });
