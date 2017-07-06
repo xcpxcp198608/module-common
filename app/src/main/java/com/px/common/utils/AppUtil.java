@@ -213,7 +213,21 @@ public class AppUtil {
         }
     }
 
-
+       /**
+     * 判断当前app是否需要更新
+     * @param context 上下文
+     * @param code 服务器最新版本code
+     * @return 是否需要更新
+     */
+    public static boolean isNeedUpgrade(Context context, int code){
+        if(isInstalled(context, context.getPackageName())){
+            int localCode = getVersionCode(context, context.getPackageName());
+            return localCode < code;
+        }else{
+            return false;
+        }
+    }
+    
     /**
      * 获得APK文件的versionCode
      * @param context 上下文
