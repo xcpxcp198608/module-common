@@ -12,16 +12,20 @@ import java.util.Map;
 public class SPUtils {
 
     private static final String NAME = "sp";
+    private static SharedPreferences sharedPreferences;
+    private static SharedPreferences.Editor editor;
+
+    static {
+        sharedPreferences = CommonApplication.context.getSharedPreferences(NAME , Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+    }
 
     /**
      * 根据传入的object对象类型存成对应类型的键值对
-     * @param context Application context
      * @param key key
      * @param object type: String, int, boolean, float , long
      */
-    public static void put (Context context , String key , Object object){
-        SharedPreferences sharedPreferences = context.getSharedPreferences(NAME , Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+    public static synchronized void put (String key , Object object){
         if(key ==null || object==null){
             return;
         }
@@ -43,13 +47,11 @@ public class SPUtils {
 
     /**
      * 根据默认值类型从shared preferences中取出对应类型和Key的值
-     * @param context Application context
      * @param key key
      * @param defaultObject type: String, int, boolean, float , long
      * @return key 存在时返回对应的值，不存在时返回默认值,默认值类型错误时返回Null
      */
-    public static Object get(Context context , String key , Object defaultObject){
-        SharedPreferences sharedPreferences = context.getSharedPreferences(NAME  ,Context.MODE_PRIVATE);
+    public static synchronized Object get(String key , Object defaultObject){
         if(defaultObject instanceof String){
             return sharedPreferences.getString(key , (String) defaultObject);
         }else  if(defaultObject instanceof Integer){
@@ -67,13 +69,10 @@ public class SPUtils {
 
     /**
      * 从 shared preferences 删除对应key的键值对
-     * @param context Application context
      * @param key key
      */
-    public static boolean remove (Context context , String key){
+    public static synchronized boolean remove (String key){
         try{
-            SharedPreferences sharedPreferences = context.getSharedPreferences(NAME  ,Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.remove(key);
             editor.apply();
             return true;
@@ -84,12 +83,9 @@ public class SPUtils {
 
     /**
      * 清空shared preferences 中所有的键值对
-     * @param context Application context
      */
-    public static boolean clear (Context context){
+    public static synchronized boolean clear (){
         try{
-            SharedPreferences sharedPreferences = context.getSharedPreferences(NAME  ,Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.clear();
             editor.apply();
             return true;
@@ -101,22 +97,18 @@ public class SPUtils {
 
     /**
      * 判断 shared preferences 中是否包含传入的key
-     * @param context Application context
      * @param key key
      * @return is contains
      */
-    public static boolean contains (Context context , String key){
-        SharedPreferences sharedPreferences = context.getSharedPreferences(NAME  ,Context.MODE_PRIVATE);
+    public static synchronized boolean contains (String key){
         return sharedPreferences.contains(key);
     }
 
     /**
      * 获取 shared preferences 中所有的键值对并存入一个map中
-     * @param context Application context
      * @return map
      */
-    public static Map<String, ?> getAll(Context context){
-        SharedPreferences sharedPreferences = context.getSharedPreferences(NAME  ,Context.MODE_PRIVATE);
+    public static synchronized Map<String, ?> getAll(){
         return sharedPreferences.getAll();
     }
 
