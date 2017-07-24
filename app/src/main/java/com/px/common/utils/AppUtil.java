@@ -21,16 +21,15 @@ public class AppUtil {
 
     /**
      * 通过包名判断APK是否已安装
-     * @param context 上下文
      * @param packageName apk的完整包名
      * @return 是否已安装
      */
-    public static boolean isInstalled (Context context , String packageName){
+    public static boolean isInstalled (String packageName){
         if(TextUtils.isEmpty(packageName)){
             return false;
         }
         try {
-            context.getPackageManager().getPackageInfo(packageName , PackageManager.GET_ACTIVITIES);
+            CommonApplication.context.getPackageManager().getPackageInfo(packageName , PackageManager.GET_ACTIVITIES);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
             Log.d("----px----" , e.getMessage());
@@ -40,12 +39,11 @@ public class AppUtil {
 
     /**
      * 通过包名获得已经安装APK的icon
-     * @param context 上下文
      * @param packageName apk的完整包名
      * @return icon的drawable
      */
-    public static Drawable getIcon (Context context , String packageName){
-        PackageManager packageManager = context.getPackageManager();
+    public static Drawable getIcon (String packageName){
+        PackageManager packageManager = CommonApplication.context.getPackageManager();
         ApplicationInfo applicationInfo = null;
         try {
             applicationInfo = packageManager.getApplicationInfo(packageName ,PackageManager.GET_META_DATA);
@@ -61,12 +59,11 @@ public class AppUtil {
 
     /**
      * 通过包名获得已安装APK的label name
-     * @param context 上下文
      * @param packageName apk的完整包名
      * @return apk的LABEL (显示的名称)
      */
-    public static String getLabelName (Context context , String packageName) {
-        PackageManager packageManager = context.getPackageManager();
+    public static String getLabelName (String packageName) {
+        PackageManager packageManager = CommonApplication.context.getPackageManager();
         ApplicationInfo applicationInfo = null;
         try {
             applicationInfo = packageManager.getApplicationInfo(packageName ,PackageManager.GET_META_DATA);
@@ -82,17 +79,16 @@ public class AppUtil {
 
     /**
      * 通过包名获得已安装APK的version name
-     * @param context 上下文
      * @param packageName apk的完整包名
      * @return 版本号
      */
-    public static String getVersionName (Context context , String packageName) {
+    public static String getVersionName (String packageName) {
         if(TextUtils.isEmpty(packageName)){
             return "apkPackageName error";
         }
         String apkVersionName = null;
         try {
-            PackageManager packageManager = context.getPackageManager();
+            PackageManager packageManager = CommonApplication.context.getPackageManager();
             PackageInfo packageInfo = packageManager.getPackageInfo(packageName , PackageManager.GET_ACTIVITIES);
             if(packageInfo != null) {
                 apkVersionName = packageInfo.versionName;
@@ -107,17 +103,16 @@ public class AppUtil {
 
     /**
      * 通过包名获得已安装APK的version code
-     * @param context 上下文
      * @param packageName apk的完整包名
      * @return 版本代号
      */
-    public static int getVersionCode (Context context , String packageName) {
+    public static int getVersionCode (String packageName) {
         if(TextUtils.isEmpty(packageName)){
             return 0;
         }
         int apkVersionCode = 0;
         try {
-            PackageManager packageManager = context.getPackageManager();
+            PackageManager packageManager = CommonApplication.context.getPackageManager();
             PackageInfo packageInfo = packageManager.getPackageInfo(packageName , PackageManager.GET_ACTIVITIES);
             if(packageInfo != null) {
                 apkVersionCode = packageInfo.versionCode;
@@ -132,14 +127,13 @@ public class AppUtil {
 
     /**
      * 通过包名和版本编号判断apk是否是最新版本
-     * @param context 上下文
      * @param packageName apk的完整包名
      * @param versionCode 参照的正确版本代号
      * @return 是否是最新版本
      */
-    public static boolean isLastVersion (Context context ,String packageName ,int versionCode) {
-        if(isInstalled(context , packageName)) {
-            int localVersionCode = getVersionCode(context,packageName);
+    public static boolean isLastVersion (String packageName ,int versionCode) {
+        if(isInstalled(packageName)) {
+            int localVersionCode = getVersionCode(packageName);
             if(versionCode > localVersionCode){
                 return true;
             }else {
@@ -152,15 +146,14 @@ public class AppUtil {
 
     /**
      * 获得已存在的apk文件的包名
-     * @param context 上下文
      * @param filePath 文件绝对路径
      * @param fileName 文件名称
      * @return apk文件的包名
      */
-    public static String getApkPackageName (Context context , String filePath ,String fileName){
+    public static String getApkPackageName (String filePath ,String fileName){
         ApplicationInfo applicationInfo = null;
         PackageInfo packageInfo = null;
-        PackageManager packageManager = context.getPackageManager();
+        PackageManager packageManager = CommonApplication.context.getPackageManager();
         String apkPackageName = null;
         packageInfo = packageManager.getPackageArchiveInfo(filePath+fileName ,PackageManager.GET_ACTIVITIES);
         if(packageInfo != null){
@@ -175,15 +168,14 @@ public class AppUtil {
 
     /**
      * 获得已经存在的apk文件的版本号
-     * @param context 上下文
      * @param filePath 文件绝对路径
      * @param fileName 文件名称
      * @return 版本号
      */
-    public static String getApkVersionName (Context context , String filePath ,String fileName){
+    public static String getApkVersionName (String filePath ,String fileName){
         ApplicationInfo applicationInfo = null;
         PackageInfo packageInfo = null;
-        PackageManager packageManager = context.getPackageManager();
+        PackageManager packageManager = CommonApplication.context.getPackageManager();
         String apkVersionName = null;
         packageInfo = packageManager.getPackageArchiveInfo(filePath+fileName ,PackageManager.GET_ACTIVITIES);
         if(packageInfo != null){
@@ -197,14 +189,13 @@ public class AppUtil {
 
     /**
      * 判断apk文件是否可安装
-     * @param context 上下文
      * @param filePath 文件绝对路径
      * @param fileName 文件名称
      * @return 是否可以安装
      */
-    public static boolean isApkCanInstall (Context context , String filePath ,String fileName){
+    public static boolean isApkCanInstall (String filePath ,String fileName){
         PackageInfo packageInfo = null;
-        PackageManager packageManager = context.getPackageManager();
+        PackageManager packageManager = CommonApplication.context.getPackageManager();
         packageInfo = packageManager.getPackageArchiveInfo(filePath+"/"+fileName ,PackageManager.GET_ACTIVITIES);
         if(packageInfo != null){
             return true;
@@ -215,13 +206,12 @@ public class AppUtil {
 
        /**
      * 判断当前app是否需要更新
-     * @param context 上下文
      * @param code 服务器最新版本code
      * @return 是否需要更新
      */
-    public static boolean isNeedUpgrade(Context context, int code){
-        if(isInstalled(context, context.getPackageName())){
-            int localCode = getVersionCode(context, context.getPackageName());
+    public static boolean isNeedUpgrade(int code){
+        if(isInstalled(CommonApplication.context.getPackageName())){
+            int localCode = getVersionCode(CommonApplication.context.getPackageName());
             return localCode < code;
         }else{
             return false;
@@ -230,15 +220,14 @@ public class AppUtil {
     
     /**
      * 获得APK文件的versionCode
-     * @param context 上下文
      * @param filePath 文件绝对路径
      * @param fileName 文件名称
      * @return apk文件的版本代号
      */
-    public static int getApkVersionCode (Context context , String filePath ,String fileName){
+    public static int getApkVersionCode (String filePath ,String fileName){
         ApplicationInfo applicationInfo = null;
         PackageInfo packageInfo = null;
-        PackageManager packageManager = context.getPackageManager();
+        PackageManager packageManager = CommonApplication.context.getPackageManager();
         int apkVersionCode = 0;
         packageInfo = packageManager.getPackageArchiveInfo(filePath+fileName ,PackageManager.GET_ACTIVITIES);
         if(packageInfo != null){
@@ -252,25 +241,24 @@ public class AppUtil {
 
     /**
      * 安装apk文件
-     * @param context 上下文
      * @param filePath 文件绝对路径
      * @param fileName 文件名称
      */
-    public static void installApk (Context context , String filePath , String fileName){
+    public static void installApk (String filePath , String fileName){
         File file = new File(filePath, fileName);
         if(!file.exists()) {
-            Toast.makeText(context , "Apk file is not exists" ,Toast.LENGTH_SHORT).show();
+            Toast.makeText(CommonApplication.context , "Apk file is not exists" ,Toast.LENGTH_SHORT).show();
             return;
         }
-        if(!isApkCanInstall(context , filePath ,fileName)){
-            Toast.makeText(context , "Apk file can not install" ,Toast.LENGTH_SHORT).show();
+        if(!isApkCanInstall(filePath ,fileName)){
+            Toast.makeText(CommonApplication.context , "Apk file can not install" ,Toast.LENGTH_SHORT).show();
             return;
         }
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setAction(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(file),"application/vnd.android.package-archive");
-        context.startActivity(intent);
+        CommonApplication.context.startActivity(intent);
     }
 
     /**
@@ -279,7 +267,7 @@ public class AppUtil {
      * @param packageName apk的包名
      */
     public static void launchApp (Context context ,String packageName){
-        if(!isInstalled(context , packageName)){
+        if(!isInstalled(packageName)){
             return;
         }
         Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);

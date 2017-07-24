@@ -139,11 +139,10 @@ public class SysUtils {
 
     /**
      * 获得当前系统语言
-     * @param context 上下文
      * @return 当前系统设置的语言+国家地区类型
      */
-    public static String getLanguage (Context context) {
-        Locale locale = context.getResources().getConfiguration().locale;
+    public static String getLanguage () {
+        Locale locale = CommonApplication.context.getResources().getConfiguration().locale;
         String language = locale.getLanguage();
         String country = locale.getCountry();
         //Log.d("----px----" ,language+"_"+country);
@@ -152,17 +151,17 @@ public class SysUtils {
 
     /**
      * 获取设备android_id
-     * @param context 上下文
      * @return device idRegularUtil.java
      */
-    public static String getAndroidId(Context context) {
-        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+    public static String getAndroidId() {
+        return Settings.Secure.getString(CommonApplication.context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
     }
 
     /**
      * 用系统浏览器打开网址
      */
-    public static void openUrl (Context context ,String url){
+    public static void openUrl (Context context, String url){
         Uri uri = Uri.parse(url);
         Intent intent = new Intent (Intent.ACTION_VIEW ,uri);
         context.startActivity(intent);

@@ -11,22 +11,22 @@ public class ConvertUnit {
 
     /**
      * 像素值转化为dp值
-     * @param context 上下文
      * @param px 像素
      * @return dp
      */
-    public static int px2dp (Context context , int px){
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP , px , context.getResources().getDisplayMetrics());
+    public static int px2dp (int px){
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP , px ,
+                CommonApplication.context.getResources().getDisplayMetrics());
     }
 
     /**
      * 像素转化为sp
-     * @param context 上下文
      * @param px 像素
      * @return sp
      */
-    public static int px2sp (Context context , int px){
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP , px ,context.getResources().getDisplayMetrics());
+    public static int px2sp (int px){
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP , px ,
+                CommonApplication.context.getResources().getDisplayMetrics());
     }
 
     /**
