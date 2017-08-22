@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.px.common.animator.Zoom;
+
 /**
  * base recycle adapter
  */
@@ -14,6 +16,7 @@ public abstract class BaseRecycleAdapter<VH extends RecyclerView.ViewHolder> ext
     private OnItemClickListener onItemClickListener;
     private OnItemLongClickListener onItemLongClickListener;
     private OnItemFocusListener onItemFocusListener;
+    private boolean zoom = true;
 
     /**
      * 设置item layout resource id
@@ -70,10 +73,25 @@ public abstract class BaseRecycleAdapter<VH extends RecyclerView.ViewHolder> ext
             holder.itemView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
+                    if(zoom) {
+                        if (hasFocus) {
+                            Zoom.zoomIn10to11(v);
+                        } else {
+                            Zoom.zoomIn11to10(v);
+                        }
+                    }
                     onItemFocusListener.onFocus(v, position, hasFocus);
                 }
             });
         }
+    }
+
+    public boolean isZoom() {
+        return zoom;
+    }
+
+    public void setZoom(boolean zoom) {
+        this.zoom = zoom;
     }
 
     @Override

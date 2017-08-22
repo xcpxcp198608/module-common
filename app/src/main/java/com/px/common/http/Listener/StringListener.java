@@ -2,14 +2,15 @@ package com.px.common.http.Listener;
 
 import java.io.IOException;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
 
 
 public abstract class StringListener implements Callback {
@@ -24,9 +25,9 @@ public abstract class StringListener implements Callback {
         }
         Observable.just(e.getMessage())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<String>() {
+                .subscribe(new Consumer<String>() {
                     @Override
-                    public void call(String s) {
+                    public void accept(String s) throws Exception {
                         onFailure(s);
                     }
                 });
@@ -35,9 +36,9 @@ public abstract class StringListener implements Callback {
     @Override
     public void onResponse(Call call, Response response) throws IOException {
         Observable.just(response)
-                .map(new Func1<Response, String>() {
+                .map(new Function<Response, String>() {
                     @Override
-                    public String call(Response response) {
+                    public String apply(Response response) throws Exception {
                         try {
                             return response.body().string();
                         } catch (IOException e) {
@@ -46,10 +47,23 @@ public abstract class StringListener implements Callback {
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<String>() {
+                .subscribe(new Observer<String>() {
                     @Override
-                    public void onCompleted() {
+                    public void onSubscribe(Disposable d) {
 
+                    }
+
+                    @Override
+                    public void onNext(String value) {
+                        try {
+                            if(value!=null) {
+                                onSuccess(value);
+                            }else{
+                                onFailure("response data is empty");
+                            }
+                        } catch (IOException e) {
+                            onFailure("response data is empty");
+                        }
                     }
 
                     @Override
@@ -60,16 +74,8 @@ public abstract class StringListener implements Callback {
                     }
 
                     @Override
-                    public void onNext(String s) {
-                        try {
-                            if(s!=null) {
-                                onSuccess(s);
-                            }else{
-                                onFailure("response data is empty");
-                            }
-                        } catch (IOException e) {
-                            onFailure("response data is empty");
-                        }
+                    public void onComplete() {
+
                     }
                 });
     }
