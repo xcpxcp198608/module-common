@@ -21,7 +21,7 @@ import java.util.Locale;
  * system utils
  */
 
-public class SysUtils {
+public class SysUtil {
 
     /**
      * 判断系统是否已Root

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.px.common.http.HttpMaster;
 import com.px.common.http.Listener.StringListener;
 import com.px.common.utils.Logger;
+import com.px.common.utils.NetUtil;
 
 import java.io.IOException;
 
@@ -15,6 +16,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
     }
 }
