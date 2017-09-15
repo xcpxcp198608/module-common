@@ -18,8 +18,8 @@ import okhttp3.Response;
 
 public abstract class StringListener implements Callback {
 
-    abstract void onSuccess(String s) throws IOException;
-    abstract void onFailure (String e);
+    public abstract void onSuccess(String s) throws IOException;
+    public abstract void onFailure (String e);
 
     @Override
     public void onFailure(@NonNull Call call, @NonNull IOException e) {

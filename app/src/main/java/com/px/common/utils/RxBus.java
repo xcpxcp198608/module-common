@@ -39,7 +39,7 @@ public class RxBus {
     }
 
     //根据事件类型获得对应的Flowable
-    public <T>Flowable<T> getObservable(Class<T> type){
+    private <T>Flowable<T> getObservable(Class<T> type){
         return mSubject.toFlowable(BackpressureStrategy.BUFFER)
                 .ofType(type);
     }
@@ -56,5 +56,4 @@ public class RxBus {
                 .observeOn(AndroidSchedulers.mainThread());
 
     }
-
 }

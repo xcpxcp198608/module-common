@@ -49,6 +49,10 @@ android {
         exclude 'META-INF/rxjava.properties'
         // ... and any other excludes Go here
     }
+
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
