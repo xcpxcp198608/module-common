@@ -1,14 +1,11 @@
 package com.px.common.utils;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
-import rx.subjects.PublishSubject;
-import rx.subjects.SerializedSubject;
-import rx.subjects.Subject;
+import java.util.HashMap;
 
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * 基于rx java的事件传递处理
@@ -16,11 +13,14 @@ import rx.subjects.Subject;
 
 public class RxBus {
 
-    // PublishSubject只会把在订阅发生的时间点之后来自原始Observable的数据发射给观察者
-    private final Subject<Object ,Object> rxBus = new SerializedSubject<>(PublishSubject.create());
+    private HashMap<String, CompositeDisposable> mSubscriptionMap;
+    private static volatile RxBus mRxBus;
+    private final io.reactivex.subjects.Subject<Object> mSubject;
 
     // RxBus单例 ，全局只有一个实例， 双重校验锁保证多线程调用
-    private RxBus (){}
+    private RxBus (){
+        mSubject = io.reactivex.subjects.PublishSubject.create().toSerialized();
+    }
     private static volatile RxBus instance;
     public static RxBus getDefault(){
         if(instance == null){
@@ -35,25 +35,26 @@ public class RxBus {
 
     //发送事件（事件由调用者定义）
     public void post(Object object){
-        rxBus.onNext(object);
+        mSubject.onNext(object);
+    }
+
+    //根据事件类型获得对应的Flowable
+    public <T>Flowable<T> getObservable(Class<T> type){
+        return mSubject.toFlowable(BackpressureStrategy.BUFFER)
+                .ofType(type);
     }
 
     /**
-     * 根据事件类型进行订阅过滤返回一个事件类型对应的Observable
-     * @param event  事件
-     * @param <T> 事件类型
-     * @return 返回事件类型对应的Observable,订阅时直接使用subscribe()
+     * 订阅 Flowable
+     * @param type event type
+     * @param <T> fanxing
+     * @return flowable<T> object
      */
-    public <T> Observable<T> toObservable(final Class<T> event){
-        return rxBus
-                .subscribeOn(Schedulers.io())
-                .filter(new Func1<Object, Boolean>() {
-                    @Override
-                    public Boolean call(Object o) {
-                        return event.isInstance(o);
-                    }
-                })
-                .cast(event);
+    public <T> Flowable<T> subscribe(Class<T> type){
+        return getObservable(type)
+                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
     }
 
 }

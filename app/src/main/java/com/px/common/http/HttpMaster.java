@@ -15,7 +15,7 @@ public class HttpMaster {
 
     public static OkHttpClient okHttpClient;
 
-    /**
+    /*
      * okhttp client init
      */
     static {
