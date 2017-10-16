@@ -12,6 +12,14 @@ import java.security.MessageDigest;
 public class FileUtil {
 
     /**
+     * 获取当前应用内部存储目录下的download目录路径， 没有则创建改目录
+     * @return download path
+     */
+    public static String getDownloadPath(){
+        return CommonApplication.context.getExternalFilesDir("download").getAbsolutePath();
+    }
+
+    /**
      * 通过file path 和 file name 判断文件是否存在
      * @param filePath 文件绝对路径
      * @param fileName 文件名称
@@ -82,7 +90,7 @@ public class FileUtil {
      */
     public static boolean delete(String filePath ,String fileName ) {
         try {
-            return new File(filePath + fileName).delete();
+            return new File(filePath + "/" + fileName).delete();
         } catch (Exception e) {
             return false;
         }

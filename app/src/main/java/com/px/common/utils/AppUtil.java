@@ -7,6 +7,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -258,6 +260,36 @@ public class AppUtil {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setAction(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(file),"application/vnd.android.package-archive");
+        CommonApplication.context.startActivity(intent);
+    }
+
+    /**
+     * 7.0 后安装apk文件
+     * @param filePath 文件绝对路径
+     * @param fileName 文件名称
+     * @param permission manifests 中配置的file provider的permission
+     */
+    public static void installApk(String filePath , String fileName, String permission){
+        File file = new File(filePath, fileName);
+        if(!file.exists()) {
+            Toast.makeText(CommonApplication.context , "Apk file is not exists" ,Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(!isApkCanInstall(filePath ,fileName)){
+            Toast.makeText(CommonApplication.context , "Apk file can not install" ,Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Uri uri ;
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setAction(Intent.ACTION_VIEW);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            uri = FileProvider.getUriForFile(CommonApplication.context, permission, file);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }else{
+            uri = Uri.fromFile(file);
+        }
+        intent.setDataAndType(uri,"application/vnd.android.package-archive");
         CommonApplication.context.startActivity(intent);
     }
 
