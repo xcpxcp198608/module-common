@@ -20,6 +20,14 @@ public class FileUtil {
     }
 
     /**
+     * 获取当前应用内部存储目录下指定名称的目录路径， 没有则创建改目录
+     * @return download path
+     */
+    public static String getPathWith(String dir){
+        return CommonApplication.context.getExternalFilesDir(dir).getAbsolutePath();
+    }
+
+    /**
      * 通过file path 和 file name 判断文件是否存在
      * @param filePath 文件绝对路径
      * @param fileName 文件名称

@@ -8,6 +8,9 @@ import android.net.Uri;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Display;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -165,5 +168,46 @@ public class SysUtil {
         Uri uri = Uri.parse(url);
         Intent intent = new Intent (Intent.ACTION_VIEW ,uri);
         context.startActivity(intent);
+    }
+
+    /**
+     * 判断当前软键盘是否打开
+     * @param activity 上下文
+     * @return result
+     */
+    public static boolean isSoftInputShow(Activity activity) {
+        View view = activity.getWindow().peekDecorView();
+        if (view != null) {
+            InputMethodManager inputManger = (InputMethodManager) activity
+                    .getSystemService(Activity.INPUT_METHOD_SERVICE);
+            return inputManger.isActive() && activity.getWindow().getCurrentFocus() != null;
+        }
+        return false;
+    }
+
+    /**
+     * 打开软键盘
+     * @param editText  输入框
+     * @param context 上下文
+     */
+    public static void openKeybord(EditText editText, Context context) {
+        InputMethodManager imm = (InputMethodManager) context
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, InputMethodManager.RESULT_SHOWN);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,
+                InputMethodManager.HIDE_IMPLICIT_ONLY);
+    }
+
+    /**
+     * 关闭软键盘
+     * @param editText 输入框
+     * @param context 上下文
+     */
+    public static void closeKeybord(EditText editText, Context context) {
+        if(isSoftInputShow((Activity) context)) {
+            InputMethodManager imm = (InputMethodManager) context
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+        }
     }
 }
