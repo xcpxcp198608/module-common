@@ -241,12 +241,20 @@ public class AppUtil {
         return apkVersionCode;
     }
 
+    public static void installApk(String filePath , String fileName, String permission){
+        if(Build.VERSION.SDK_INT > 23){
+            installApkAfter7(filePath, fileName, permission);
+        }else{
+            installApkBefore7(filePath, fileName);
+        }
+    }
+
     /**
      * 安装apk文件
      * @param filePath 文件绝对路径
      * @param fileName 文件名称
      */
-    public static void installApk (String filePath , String fileName){
+    private static void installApkBefore7 (String filePath , String fileName){
         File file = new File(filePath, fileName);
         if(!file.exists()) {
             Toast.makeText(CommonApplication.context , "Apk file is not exists" ,Toast.LENGTH_SHORT).show();
@@ -269,7 +277,7 @@ public class AppUtil {
      * @param fileName 文件名称
      * @param permission manifests 中配置的file provider的permission
      */
-    public static void installApk(String filePath , String fileName, String permission){
+    private static void installApkAfter7(String filePath , String fileName, String permission){
         File file = new File(filePath, fileName);
         if(!file.exists()) {
             Toast.makeText(CommonApplication.context , "Apk file is not exists" ,Toast.LENGTH_SHORT).show();
