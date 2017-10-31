@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.px.common.crash.CrashHandler;
 import com.px.common.utils.Logger;
 import com.squareup.leakcanary.LeakCanary;
 
@@ -28,6 +29,7 @@ public class CommonApplication extends Application {
             return;
         }
         LeakCanary.install(this);
+        CrashHandler.getInstance().init(this);
     }
 
 }
