@@ -5,14 +5,17 @@ import android.os.Looper;
 import android.os.Message;
 
 import com.px.common.http.Bean.DownloadInfo;
+import com.px.common.utils.SPUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Headers;
 import okhttp3.Response;
 
 
@@ -77,26 +80,25 @@ public class DownloadCallback implements Callback {
     @Override
     public void onFailure(Call call, IOException e) {
         downloadInfo = new DownloadInfo();
-        if(e != null){
-            downloadInfo.setMessage(e.getMessage());
-        }
+        downloadInfo.setMessage(e.getMessage());
         downloadInfo.setStatus(STATUS_ERROR);
         handler.obtainMessage(STATUS_ERROR ,downloadInfo).sendToTarget();
     }
 
     @Override
     public void onResponse(Call call, Response response) throws IOException {
-        if(response == null){
-            downloadInfo.setStatus(STATUS_ERROR);
-            downloadInfo.setMessage("download response is empty");
-            handler.obtainMessage(STATUS_ERROR ,downloadInfo).sendToTarget();
-            return;
-        }
-        if(response.body().contentLength() <=0 ){
+        if(response.body().contentLength() <= 0 ){
             downloadInfo.setStatus(STATUS_ERROR);
             downloadInfo.setMessage("file length read error");
             handler.obtainMessage(STATUS_ERROR ,downloadInfo).sendToTarget();
             return;
+        }
+        Headers headers = response.headers();
+        List<String> cookies = headers.values("Set-Cookie");
+        if(cookies != null && cookies.size() > 0 ) {
+            String session = cookies.get(0);
+            String cookie = session.substring(0, session.indexOf(";"));
+            SPUtil.put("cookie", cookie);
         }
         downloadInfo.setLength(response.body().contentLength());
         InputStream inputStream =null;
