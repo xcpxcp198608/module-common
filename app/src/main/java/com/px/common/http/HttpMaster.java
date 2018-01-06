@@ -6,6 +6,7 @@ import com.px.common.http.Request.DownloadRequest;
 import com.px.common.http.Request.GetRequest;
 import com.px.common.http.Request.PostRequest;
 import com.px.common.http.Request.UploadRequest;
+import com.px.common.http.interceptors.SessionInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -23,6 +24,7 @@ public class HttpMaster {
         builder.connectTimeout(30, TimeUnit.SECONDS);
         builder.writeTimeout(30,TimeUnit.SECONDS);
         builder.readTimeout(30,TimeUnit.SECONDS);
+        builder.addInterceptor(new SessionInterceptor());
         okHttpClient = builder.build();
     }
 

@@ -29,7 +29,7 @@ public class CommonApplication extends Application {
             return;
         }
         LeakCanary.install(this);
-        CrashHandler.getInstance().init(this);
+        CrashHandler.getInstance().init();
     }
 
 }
