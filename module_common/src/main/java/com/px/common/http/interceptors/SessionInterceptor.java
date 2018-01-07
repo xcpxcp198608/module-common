@@ -41,7 +41,7 @@ public class SessionInterceptor implements Interceptor {
 //                Logger.d(web);
                 String sessionId = (String) SPUtil.get(web + KEY, "");
                 if (!TextUtils.isEmpty(sessionId)) {
-                    requestBuilder.addHeader("Cookie-key", sessionId);
+                    requestBuilder.addHeader("Cookie", sessionId);
                     Logger.d("request:" + sessionId);
                 }
 
@@ -58,8 +58,8 @@ public class SessionInterceptor implements Interceptor {
             }
         }catch(Exception e){
             Logger.d(e.getLocalizedMessage());
-            return chain.proceed(chain.request());
+            return chain.proceed(request);
         }
-        return chain.proceed(chain.request());
+        return chain.proceed(request);
     }
 }
