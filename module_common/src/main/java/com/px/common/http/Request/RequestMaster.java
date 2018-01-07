@@ -10,12 +10,17 @@ import com.px.common.http.Listener.DownloadListener;
 import com.px.common.http.Listener.UploadListener;
 import com.px.common.http.configuration.Header;
 import com.px.common.http.configuration.Parameters;
+import com.px.common.utils.EmojiToast;
+import com.px.common.utils.NetUtil;
 import com.px.common.utils.SPUtil;
 
 import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
@@ -30,10 +35,6 @@ public abstract class RequestMaster {
     public RequestMaster() {
         parameters = new Parameters();
         header = new Header();
-        String cookie = (String) SPUtil.get("cookie", "");
-        if(!TextUtils.isEmpty(cookie)){
-            header.put("Cookie", cookie);
-        }
     }
 
     public RequestMaster tag(Object tag){
@@ -72,9 +73,21 @@ public abstract class RequestMaster {
     }
 
     protected abstract Request createRequest(Header header, Parameters parameters ,Object tag);
+
     //异步执行请求
     public void enqueue (Callback callback){
         try {
+            if(!NetUtil.isConnected()){
+                Observable.just("")
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<String>() {
+                            @Override
+                            public void accept(String s) throws Exception {
+                                EmojiToast.showLong("network connection error, please check your network", EmojiToast.EMOJI_SAD);
+                            }
+                        });
+                return;
+            }
             Request request = createRequest(header, parameters, mTag);
             Call call = HttpMaster.okHttpClient.newCall(request);
             call.enqueue(callback);
@@ -88,6 +101,17 @@ public abstract class RequestMaster {
     //异步执行下载
     public void startDownload (DownloadListener downloadListener){
         try {
+            if(!NetUtil.isConnected()){
+                Observable.just("")
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<String>() {
+                            @Override
+                            public void accept(String s) throws Exception {
+                                EmojiToast.showLong("network connection error, please check your network", EmojiToast.EMOJI_SAD);
+                            }
+                        });
+                return;
+            }
             Request request = createRequest(header , parameters ,mTag);
             Call call = HttpMaster.okHttpClient.newCall(request);
             call.enqueue(new DownloadCallback(mDownloadInfo ,downloadListener));
@@ -100,6 +124,17 @@ public abstract class RequestMaster {
     }
     public void upload(UploadListener uploadListener){
         try {
+            if(!NetUtil.isConnected()){
+                Observable.just("")
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<String>() {
+                            @Override
+                            public void accept(String s) throws Exception {
+                                EmojiToast.showLong("network connection error, please check your network", EmojiToast.EMOJI_SAD);
+                            }
+                        });
+                return;
+            }
             Request request = createRequest(header , parameters ,mTag);
             Call call = HttpMaster.okHttpClient.newCall(request);
             call.enqueue(uploadListener);

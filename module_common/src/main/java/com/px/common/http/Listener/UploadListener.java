@@ -23,15 +23,6 @@ public abstract class UploadListener implements Callback {
 
     @Override
     public void onResponse(Call call, Response response) throws IOException {
-        Headers headers = response.headers();
-        List<String> cookies = headers.values("Set-Cookie");
-        if(cookies != null && cookies.size() > 0 ) {
-            String session = cookies.get(0);
-            String cookie = session.substring(0, session.indexOf(";"));
-            SPUtil.put("cookie", cookie);
-        }
-        if(response!= null) {
-            onSuccess(response);
-        }
+        onSuccess(response);
     }
 }

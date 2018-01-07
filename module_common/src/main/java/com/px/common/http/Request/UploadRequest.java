@@ -43,6 +43,7 @@ public class UploadRequest extends RequestMaster {
             builder.headers(headers);
         }
         builder.post(bodyBuilder.build()).url(url);
+        builder.tag("upload");
         return builder.build();
     }
 }

@@ -42,13 +42,6 @@ public abstract class StringListener implements Callback {
 
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-        Headers headers = response.headers();
-        List<String> cookies = headers.values("Set-Cookie");
-        if(cookies != null && cookies.size() > 0 ) {
-            String session = cookies.get(0);
-            String cookie = session.substring(0, session.indexOf(";"));
-            SPUtil.put("cookie", cookie);
-        }
         Observable.just(response)
                 .map(new Function<Response, String>() {
                     @Override

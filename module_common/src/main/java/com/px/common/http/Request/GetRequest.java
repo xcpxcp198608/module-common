@@ -36,6 +36,7 @@ public class GetRequest extends RequestMaster {
         }
         //Logger.d(url);
         builder.get().url(url);
+        builder.tag("get");
         return builder.build();
     }
 }

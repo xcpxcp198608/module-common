@@ -93,13 +93,6 @@ public class DownloadCallback implements Callback {
             handler.obtainMessage(STATUS_ERROR ,downloadInfo).sendToTarget();
             return;
         }
-        Headers headers = response.headers();
-        List<String> cookies = headers.values("Set-Cookie");
-        if(cookies != null && cookies.size() > 0 ) {
-            String session = cookies.get(0);
-            String cookie = session.substring(0, session.indexOf(";"));
-            SPUtil.put("cookie", cookie);
-        }
         downloadInfo.setLength(response.body().contentLength());
         InputStream inputStream =null;
         RandomAccessFile randomAccessFile = null;

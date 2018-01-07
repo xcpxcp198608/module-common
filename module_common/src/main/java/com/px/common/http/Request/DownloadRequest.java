@@ -76,6 +76,7 @@ public class DownloadRequest extends RequestMaster {
             builder.tag(tag);
         }
         builder.get().url(mUrl);
+        builder.tag("download");
         return builder.build();
     }
 }

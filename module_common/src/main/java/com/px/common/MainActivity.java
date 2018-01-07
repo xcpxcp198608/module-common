@@ -18,8 +18,8 @@ import io.reactivex.functions.Consumer;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String URL = "http://www.ldlegacy.com:8080/control_panel/update/get";
-//    private static final String URL = "http://panel.ldlegacy.com:8080/panel/category/";
+//    private static final String URL = "http://www.ldlegacy.com:8080/control_panel/update/get";
+    private static final String URL = "http://panel.ldlegacy.com:8080/panel/category/";
 
     private ActivityMainBinding binding;
     private Disposable disposable;

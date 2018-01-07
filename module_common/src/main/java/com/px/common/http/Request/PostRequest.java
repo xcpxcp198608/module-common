@@ -39,6 +39,7 @@ public class PostRequest extends RequestMaster {
             builder.tag(tag);
         }
         builder.url(url);
+        builder.tag("post");
         return builder.build();
     }
 }
