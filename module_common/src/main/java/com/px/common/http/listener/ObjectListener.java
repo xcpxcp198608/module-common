@@ -17,7 +17,7 @@ import io.reactivex.functions.Function;
 
 public abstract class ObjectListener<T> extends BaseListener {
 
-    public abstract void onSuccess(T t) throws IOException;
+    public abstract void onSuccess(T t) throws Exception;
 
     public ObjectListener(Class clasz) {
         super(clasz);
@@ -44,7 +44,7 @@ public abstract class ObjectListener<T> extends BaseListener {
                     public void onNext(T t) {
                         try {
                             onSuccess(t);
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             handFailure(e.getMessage());
                         }
                     }

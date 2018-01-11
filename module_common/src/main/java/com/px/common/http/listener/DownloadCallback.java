@@ -14,6 +14,7 @@ import java.io.RandomAccessFile;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 
 public class DownloadCallback implements Callback {
@@ -84,16 +85,47 @@ public class DownloadCallback implements Callback {
 
     @Override
     public void onResponse(Call call, Response response) throws IOException {
-        if(response.body().contentLength() <= 0 ){
-            downloadInfo.setStatus(STATUS_ERROR);
-            downloadInfo.setMessage("file length read error");
-            handler.obtainMessage(STATUS_ERROR ,downloadInfo).sendToTarget();
-            return;
-        }
-        downloadInfo.setLength(response.body().contentLength());
         InputStream inputStream =null;
         RandomAccessFile randomAccessFile = null;
         try {
+            if(response.code() == 400){
+                downloadInfo.setStatus(STATUS_ERROR);
+                downloadInfo.setMessage("request error");
+                handler.obtainMessage(STATUS_ERROR ,downloadInfo).sendToTarget();
+                return;
+            }
+            if(response.code() == 404){
+                downloadInfo.setStatus(STATUS_ERROR);
+                downloadInfo.setMessage("resource no found");
+                handler.obtainMessage(STATUS_ERROR ,downloadInfo).sendToTarget();
+                return;
+            }
+            if(response.code() == 408){
+                downloadInfo.setStatus(STATUS_ERROR);
+                downloadInfo.setMessage("request timeout");
+                handler.obtainMessage(STATUS_ERROR ,downloadInfo).sendToTarget();
+                return;
+            }
+            if(response.code() == 500){
+                downloadInfo.setStatus(STATUS_ERROR);
+                downloadInfo.setMessage("server exception");
+                handler.obtainMessage(STATUS_ERROR ,downloadInfo).sendToTarget();
+                return;
+            }
+            ResponseBody responseBody = response.body();
+            if(responseBody == null){
+                downloadInfo.setStatus(STATUS_ERROR);
+                downloadInfo.setMessage("response body is null");
+                handler.obtainMessage(STATUS_ERROR ,downloadInfo).sendToTarget();
+                return;
+            }
+            if(responseBody.contentLength() <= 0 ){
+                downloadInfo.setStatus(STATUS_ERROR);
+                downloadInfo.setMessage("file length read error");
+                handler.obtainMessage(STATUS_ERROR ,downloadInfo).sendToTarget();
+                return;
+            }
+            downloadInfo.setLength(responseBody.contentLength());
             File dir = new File(downloadInfo.getPath());
             if (!dir.exists()) {
                 dir.mkdir();
@@ -108,7 +140,7 @@ public class DownloadCallback implements Callback {
             }
             randomAccessFile = new RandomAccessFile(file, "rwd");
             randomAccessFile.seek(downloadInfo.getStartPosition());
-            inputStream = response.body().byteStream();
+            inputStream = responseBody.byteStream();
             downloadInfo.setStatus(STATUS_START);
             downloadInfo.setMessage("download is start");
             handler.obtainMessage(STATUS_START, downloadInfo).sendToTarget();
@@ -121,7 +153,7 @@ public class DownloadCallback implements Callback {
                 finished += length;
                 if(System.currentTimeMillis() - currentTime > 2000) {
                     downloadInfo.setFinishedPosition(finished);
-                    downloadInfo.setProgress((int) (finished * 100l / downloadInfo.getLength()));
+                    downloadInfo.setProgress((int) (finished * 100L / downloadInfo.getLength()));
                     downloadInfo.setStatus(STATUS_PROGRESS);
                     downloadInfo.setMessage("downloading");
                     handler.obtainMessage(STATUS_PROGRESS, downloadInfo).sendToTarget();

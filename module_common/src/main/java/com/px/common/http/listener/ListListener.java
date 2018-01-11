@@ -14,7 +14,7 @@ import io.reactivex.functions.Function;
 
 public abstract class ListListener<T> extends BaseListener {
 
-    public abstract void onSuccess(List<T> list) throws IOException;
+    public abstract void onSuccess(List<T> list) throws Exception;
 
     public ListListener(Class clasz) {
         super(clasz);
@@ -46,7 +46,7 @@ public abstract class ListListener<T> extends BaseListener {
                             }else{
                                 handFailure("result list in null");
                             }
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             handFailure(e.getMessage());
                         }
                     }

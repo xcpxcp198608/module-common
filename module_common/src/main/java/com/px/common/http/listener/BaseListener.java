@@ -61,7 +61,7 @@ public abstract class BaseListener<T> implements Callback {
 
     @Override
     public void onFailure(Call call, IOException e) {
-
+        handFailure(e.getMessage());
     }
 
     protected abstract void handResponse(String jsonString) throws Exception;

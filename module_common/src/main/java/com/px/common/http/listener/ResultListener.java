@@ -16,7 +16,7 @@ import io.reactivex.functions.Function;
 
 public abstract class ResultListener<T> extends BaseListener {
 
-    public abstract void onSuccess(ResultInfo<T> resultInfo) throws IOException;
+    public abstract void onSuccess(ResultInfo<T> resultInfo) throws Exception;
 
 
     public ResultListener(Class clasz) {
@@ -46,7 +46,7 @@ public abstract class ResultListener<T> extends BaseListener {
                     public void onNext(ResultInfo<T> resultInfo) {
                         try {
                             onSuccess(resultInfo);
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             handFailure(e.getMessage());
                         }
                     }

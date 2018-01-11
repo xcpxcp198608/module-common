@@ -7,18 +7,16 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 
-public abstract class UploadListener implements Callback {
+public abstract class UploadListener extends BaseListener {
 
-    public abstract void onSuccess(Response response) throws IOException;
-    public abstract void onFailure(String e);
+    public abstract void onSuccess(Response response) throws Exception;
 
-    @Override
-    public void onFailure(Call call, IOException e) {
-        onFailure(e.getMessage());
+    public UploadListener(Class mClass) {
+        super(mClass);
     }
 
     @Override
-    public void onResponse(Call call, Response response) throws IOException {
-        onSuccess(response);
+    protected void handResponse(String jsonString) throws Exception {
+
     }
 }
