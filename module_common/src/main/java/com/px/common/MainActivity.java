@@ -7,9 +7,7 @@ import android.view.View;
 
 import com.px.common.databinding.ActivityMainBinding;
 import com.px.common.http.listener.ObjectListener;
-import com.px.common.http.pojo.ResultInfo;
 import com.px.common.http.HttpMaster;
-import com.px.common.http.listener.ResultListener;
 import com.px.common.utils.EmojiToast;
 import com.px.common.utils.Logger;
 import com.px.common.utils.RxBus;
@@ -31,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.c_activity_main);
         disposable= RxBus.getDefault().subscribe(TestEvent.class).subscribe(new Consumer<TestEvent>() {
             @Override
             public void accept(TestEvent testEvent) throws Exception {
