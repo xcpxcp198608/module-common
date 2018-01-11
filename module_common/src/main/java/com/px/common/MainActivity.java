@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.px.common.databinding.CActivityMainBinding;
+import com.px.common.http.listener.DownloadListener;
 import com.px.common.http.listener.ObjectListener;
 import com.px.common.http.HttpMaster;
+import com.px.common.http.pojo.DownloadInfo;
 import com.px.common.utils.EmojiToast;
 import com.px.common.utils.Logger;
 import com.px.common.utils.RxBus;
@@ -77,6 +79,47 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(UpdateInfo updateInfo) throws IOException {
                                 Logger.d(updateInfo.toString());
+                                HttpMaster.download(MainActivity.this)
+                                        .url(updateInfo.getUrl())
+                                        .startDownload(new DownloadListener() {
+                                            @Override
+                                            public void onPending(DownloadInfo downloadInfo) {
+
+                                            }
+
+                                            @Override
+                                            public void onStart(DownloadInfo downloadInfo) {
+                                                Logger.d(downloadInfo.getPath());
+                                                Logger.d(downloadInfo.getName());
+                                            }
+
+                                            @Override
+                                            public void onPause(DownloadInfo downloadInfo) {
+
+                                            }
+
+                                            @Override
+                                            public void onProgress(DownloadInfo downloadInfo) {
+                                                Logger.d(downloadInfo.getProgress()+"");
+                                            }
+
+                                            @Override
+                                            public void onFinished(DownloadInfo downloadInfo) {
+                                                Logger.d(downloadInfo.getProgress()+"");
+                                                Logger.d(downloadInfo.getPath());
+                                                Logger.d(downloadInfo.getName());
+                                            }
+
+                                            @Override
+                                            public void onCancel(DownloadInfo downloadInfo) {
+
+                                            }
+
+                                            @Override
+                                            public void onError(DownloadInfo downloadInfo) {
+                                                Logger.d(downloadInfo.getMessage());
+                                            }
+                                        });
                                 RxBus.getDefault().post(new TestEvent(updateInfo.toString()));
                             }
 
