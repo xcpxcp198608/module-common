@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.px.common.databinding.ActivityMainBinding;
+import com.px.common.databinding.CActivityMainBinding;
 import com.px.common.http.listener.ObjectListener;
 import com.px.common.http.HttpMaster;
 import com.px.common.utils.EmojiToast;
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 //    private static final String URL = "http://panel.ldlegacy.com:8080/panel/user/login";
 //    private static final String URL = "http://panel.ldlegacy.com:8080/panel/category/";
 
-    private ActivityMainBinding binding;
+    private CActivityMainBinding binding;
     private Disposable disposable;
 
     @Override
