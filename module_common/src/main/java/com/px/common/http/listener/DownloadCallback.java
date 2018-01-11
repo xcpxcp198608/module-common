@@ -1,21 +1,18 @@
-package com.px.common.http.Listener;
+package com.px.common.http.listener;
 
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-import com.px.common.http.Bean.DownloadInfo;
-import com.px.common.utils.SPUtil;
+import com.px.common.http.pojo.DownloadInfo;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
-import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Headers;
 import okhttp3.Response;
 
 

@@ -1,11 +1,10 @@
-package com.px.common.http.Listener;
+package com.px.common.http.listener;
 
 import android.support.annotation.NonNull;
 
-import com.px.common.utils.SPUtil;
+import com.px.common.utils.EmojiToast;
 
 import java.io.IOException;
-import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
@@ -16,7 +15,6 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Headers;
 import okhttp3.Response;
 
 
@@ -42,6 +40,22 @@ public abstract class StringListener implements Callback {
 
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+        if(response.code() == 400){
+            EmojiToast.showLong("request error", EmojiToast.EMOJI_SAD);
+            return;
+        }
+        if(response.code() == 404){
+            EmojiToast.showLong("resource no found", EmojiToast.EMOJI_SAD);
+            return;
+        }
+        if(response.code() == 408){
+            EmojiToast.showLong("request timeout", EmojiToast.EMOJI_SAD);
+            return;
+        }
+        if(response.code() == 500){
+            EmojiToast.showLong("server exception", EmojiToast.EMOJI_SAD);
+            return;
+        }
         Observable.just(response)
                 .map(new Function<Response, String>() {
                     @Override

@@ -1,9 +1,9 @@
-package com.px.common.http.Request;
+package com.px.common.http.request;
 
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.px.common.http.Bean.DownloadInfo;
+import com.px.common.http.pojo.DownloadInfo;
 import com.px.common.http.configuration.Header;
 import com.px.common.http.configuration.Parameters;
 

@@ -1,13 +1,9 @@
-package com.px.common.http.Listener;
-
-import com.px.common.utils.SPUtil;
+package com.px.common.http.listener;
 
 import java.io.IOException;
-import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Headers;
 import okhttp3.Response;
 
 
