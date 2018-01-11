@@ -40,65 +40,79 @@ public abstract class StringListener implements Callback {
 
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-        if(response.code() == 400){
-            EmojiToast.showLong("request error", EmojiToast.EMOJI_SAD);
-            return;
-        }
-        if(response.code() == 404){
-            EmojiToast.showLong("resource no found", EmojiToast.EMOJI_SAD);
-            return;
-        }
-        if(response.code() == 408){
-            EmojiToast.showLong("request timeout", EmojiToast.EMOJI_SAD);
-            return;
-        }
-        if(response.code() == 500){
-            EmojiToast.showLong("server exception", EmojiToast.EMOJI_SAD);
-            return;
-        }
-        Observable.just(response)
-                .map(new Function<Response, String>() {
-                    @Override
-                    public String apply(Response response) throws Exception {
-                        try {
-                            return response.body().string();
-                        } catch (IOException e) {
-                            return null;
+        try {
+            if (response.code() == 400) {
+                EmojiToast.showLong("request error", EmojiToast.EMOJI_SAD);
+                return;
+            }
+            if (response.code() == 404) {
+                EmojiToast.showLong("resource no found", EmojiToast.EMOJI_SAD);
+                return;
+            }
+            if (response.code() == 408) {
+                EmojiToast.showLong("request timeout", EmojiToast.EMOJI_SAD);
+                return;
+            }
+            if (response.code() == 500) {
+                EmojiToast.showLong("server exception", EmojiToast.EMOJI_SAD);
+                return;
+            }
+            Observable.just(response)
+                    .map(new Function<Response, String>() {
+                        @Override
+                        public String apply(Response response) throws Exception {
+                            try {
+                                return response.body().string();
+                            } catch (IOException e) {
+                                return null;
+                            }
                         }
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
+                    })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<String>() {
 
-                    @Override
-                    public void onSubscribe(Disposable d) {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onNext(String value) {
-                        try {
-                            if(value!=null) {
-                                onSuccess(value);
-                            }else{
+                        @Override
+                        public void onNext(String value) {
+                            try {
+                                if (value != null) {
+                                    onSuccess(value);
+                                } else {
+                                    onFailure("response data is empty");
+                                }
+                            } catch (IOException e) {
                                 onFailure("response data is empty");
                             }
-                        } catch (IOException e) {
-                            onFailure("response data is empty");
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        if(e.getMessage() != null) {
-                            onFailure(e.getMessage());
+                        @Override
+                        public void onError(Throwable e) {
+                            if (e.getMessage() != null) {
+                                onFailure(e.getMessage());
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onComplete() {
 
-                    }
-                });
+                        }
+                    });
+        }catch (Exception e){
+            if(e.getMessage() == null){
+                return;
+            }
+            Flowable.just(e.getMessage())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<String>() {
+                        @Override
+                        public void accept(String s) throws Exception {
+                            onFailure(s);
+                        }
+                    });
+        }
     }
 }
