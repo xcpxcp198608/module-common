@@ -17,8 +17,17 @@ import com.px.common.utils.CommonApplication;
 public class ImageMaster {
 
     //普通加载
+    public static void load(String url, ImageView imageView) {
+        load(CommonApplication.context, url, imageView);
+    }
+
+    //普通加载
     public static void load(Context context, String url, ImageView imageView) {
-        Glide.with(context).load(url).into(imageView);
+        Glide.with(context)
+                .load(url)
+                .apply(new RequestOptions()
+                        .dontAnimate())
+                .into(imageView);
     }
 
     //设置加载中以及加载失败图片
@@ -27,8 +36,13 @@ public class ImageMaster {
         Glide.with(context).load(url)
                 .apply(new RequestOptions()
                         .placeholder(placeholder)
-                        .error(error))
+                        .error(error)
+                        .dontAnimate())
                 .into(imageView);
+    }
+
+    public static void load(String url, ImageView imageView, int placeholderAndError) {
+        load(url, imageView, placeholderAndError, placeholderAndError);
     }
 
     //设置加载中以及加载失败图片,使用application context, 不设置加载动画
