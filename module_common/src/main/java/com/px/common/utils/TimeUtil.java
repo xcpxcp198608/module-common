@@ -25,6 +25,7 @@ public class TimeUtil {
         try {
             date = simpleDateFormat.parse(time);
         } catch (ParseException e) {
+            Logger.e(e.getMessage());
             return 0;
         }
         return date.getTime();
