@@ -9,9 +9,9 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.px.common.TestEvent;
 import com.px.common.utils.CommonApplication;
 import com.px.common.utils.Logger;
+import com.px.common.utils.SPUtil;
 import com.px.common.utils.SysUtil;
 import com.px.common.utils.TimeUtil;
 
@@ -32,13 +32,16 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     private Thread.UncaughtExceptionHandler mDefaultHandler;
     private Map<String, String> infoMap = new HashMap<>();
-    private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ", Locale.CHINA);
+    private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
     private String mac = "default";
 
     private CrashHandler() {
     }
-    private static CrashHandler INSTANCE = new CrashHandler();
+    private static CrashHandler INSTANCE;
     public static CrashHandler getInstance() {
+        if(INSTANCE == null){
+            INSTANCE = new CrashHandler();
+        }
         return INSTANCE;
     }
 
@@ -54,7 +57,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
 
     /**
-     * 当UncaughtException发生时会转入该函数来处理
+     * execute this method when UncaughtException occur
      */
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
@@ -66,16 +69,16 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             } catch (InterruptedException e) {
                 Logger.d(e.getMessage());
             }
-            // 退出程序
+            //exit program
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(1);
         }
     }
 
     /**
-     * 自定义错误处理,收集错误信息 发送错误报告等操作均在此完成.
+     * exception handle
      * @param exception exception
-     * @return true:如果处理了该异常信息;否则返回false.
+     * @return boolean
      */
     private boolean handleException(final Throwable exception) {
         if (exception == null) {
@@ -86,19 +89,24 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             public void run() {
                 Looper.prepare();
                 exception.printStackTrace();
-                Toast.makeText(CommonApplication.context, "Unexpected error, system log", Toast.LENGTH_LONG).show();
+                Toast.makeText(CommonApplication.context, "Unknown error, system log...", Toast.LENGTH_LONG).show();
                 Looper.loop();
             }
         }.start();
-        // 收集设备参数信息
+        long lastThrowTime = (long) SPUtil.get("lastThrowTime", 0L);
+        if(lastThrowTime > 0 && System.currentTimeMillis() - lastThrowTime <= 8000){
+            lastThrowTime = System.currentTimeMillis();
+            SPUtil.put("lastThrowTime", lastThrowTime);
+            return true;
+        }
+        SPUtil.put("lastThrowTime", System.currentTimeMillis());
         collectDeviceInfo(CommonApplication.context);
-        // 保存日志文件
         saveCrashInfoToFile(exception);
         return true;
     }
 
     /**
-     * 收集设备参数信息
+     * collect the device information
      * @param context context
      */
     private void collectDeviceInfo(Context context) {
@@ -113,25 +121,25 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                 infoMap.put("packageName", context.getPackageName());
                 infoMap.put("mac", mac);
             }
-        } catch (PackageManager.NameNotFoundException e) {
-            Logger.d("an error occured when collect package info");
+        } catch (Exception e) {
+            Logger.e("An error occur when collect package info");
         }
-        Field[] fields = Build.class.getDeclaredFields();
-        for (Field field : fields) {
-            try {
+        try {
+            Field[] fields = Build.class.getDeclaredFields();
+            for (Field field : fields) {
                 field.setAccessible(true);
                 infoMap.put(field.getName(), field.get(null).toString());
                 Logger.d(field.getName() + " : " + field.get(null));
-            } catch (Exception e) {
-                Logger.d("an error occured when collect crash info");
             }
+        } catch (Exception e) {
+            Logger.d("An error occur when collect crash info");
         }
     }
 
     /**
-     * 保存错误信息到文件中
+     * save exception information into log file
      * @param exception exception
-     * @return 返回文件名称,便于将文件传送到服务器
+     * @return log file full path + name
      */
     private String saveCrashInfoToFile(Throwable exception) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -143,32 +151,41 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
         Writer writer = new StringWriter();
         PrintWriter printWriter = new PrintWriter(writer);
-        exception.printStackTrace(printWriter);
-        Throwable cause = exception.getCause();
-        while (cause != null) {
-            cause.printStackTrace(printWriter);
-            cause = cause.getCause();
-        }
-        printWriter.close();
-        String result = writer.toString();
-        String time = formatter.format(new Date());
-        stringBuilder.append(time + result);
+        FileOutputStream fileOutputStream = null;
         try {
-            String fileName = TimeUtil.getStringDate() + "_" + mac + "_crash.log";
+            exception.printStackTrace(printWriter);
+            Throwable cause = exception.getCause();
+            while (cause != null) {
+                cause.printStackTrace(printWriter);
+                cause = cause.getCause();
+            }
+            String result = formatter.format(new Date()) + writer.toString();
+            stringBuilder.append(result);
+
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                String fileName = TimeUtil.getStringDate() + "_" + mac + "_crash.log";
                 String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/logcat/";
                 File dir = new File(path);
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
-                FileOutputStream fos = new FileOutputStream(path + fileName, true);
-                fos.write((stringBuilder.toString()).getBytes());
-                fos.close();
+                fileOutputStream = new FileOutputStream(path + fileName, true);
+                fileOutputStream.write((stringBuilder.toString()).getBytes());
+                return path + fileName;
+            }else{
+                return "";
             }
-            return fileName;
         } catch (Exception e) {
-            Logger.d("an error occured while writing file...");
+            Logger.d("An error occur while writing file...");
+        }finally {
+            try {
+                writer.close();
+                printWriter.close();
+                if(fileOutputStream != null) fileOutputStream.close();
+            } catch (Exception e) {
+                Logger.e(e.getMessage());
+            }
         }
-        return null;
+        return "";
     }
 }
