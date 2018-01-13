@@ -9,6 +9,9 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.px.common.constant.Constant;
+import com.px.common.http.HttpMaster;
+import com.px.common.http.listener.StringListener;
 import com.px.common.utils.CommonApplication;
 import com.px.common.utils.Logger;
 import com.px.common.utils.SPUtil;
@@ -23,7 +26,6 @@ import java.io.Writer;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -100,8 +102,9 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             return true;
         }
         SPUtil.put("lastThrowTime", System.currentTimeMillis());
-        collectDeviceInfo(CommonApplication.context);
-        saveCrashInfoToFile(exception);
+        CrashInfo crashInfo = collectDeviceInfo(CommonApplication.context);
+        CrashInfo crashInfo1 = saveCrashInfoToFile(exception, crashInfo);
+        if(crashInfo1 != null) reportCrash(crashInfo1);
         return true;
     }
 
@@ -109,7 +112,8 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      * collect the device information
      * @param context context
      */
-    private void collectDeviceInfo(Context context) {
+    private CrashInfo collectDeviceInfo(Context context) {
+        CrashInfo crashInfo = new CrashInfo();
         try {
             PackageManager pm = context.getPackageManager();
             PackageInfo pi = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES);
@@ -120,6 +124,10 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                 infoMap.put("versionCode", versionCode);
                 infoMap.put("packageName", context.getPackageName());
                 infoMap.put("mac", mac);
+                crashInfo.setVersionName(versionName);
+                crashInfo.setVersionCode(versionCode);
+                crashInfo.setPackageName(context.getPackageName());
+                crashInfo.setMac(mac);
             }
         } catch (Exception e) {
             Logger.e("An error occur when collect package info");
@@ -130,10 +138,17 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                 field.setAccessible(true);
                 infoMap.put(field.getName(), field.get(null).toString());
                 Logger.d(field.getName() + " : " + field.get(null));
+                if("MODEL".equals(field.getName())){
+                    crashInfo.setModel(field.get(null).toString());
+                }
+                if("DISPLAY".equals(field.getName())){
+                    crashInfo.setFwVersion(field.get(null).toString());
+                }
             }
         } catch (Exception e) {
             Logger.d("An error occur when collect crash info");
         }
+        return crashInfo;
     }
 
     /**
@@ -141,7 +156,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      * @param exception exception
      * @return log file full path + name
      */
-    private String saveCrashInfoToFile(Throwable exception) {
+    private CrashInfo saveCrashInfoToFile(Throwable exception, CrashInfo crashInfo) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Map.Entry<String, String> entry : infoMap.entrySet()) {
             String key = entry.getKey();
@@ -159,8 +174,12 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                 cause.printStackTrace(printWriter);
                 cause = cause.getCause();
             }
-            String result = formatter.format(new Date()) + writer.toString();
+            String result = "Exception： \r\n" + writer.toString();
             stringBuilder.append(result);
+            stringBuilder.append("\r\n\r\n");
+
+            crashInfo.setCrashTime(TimeUtil.getStringTime());
+            crashInfo.setContent(writer.toString());
 
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 String fileName = TimeUtil.getStringDate() + "_" + mac + "_crash.log";
@@ -171,10 +190,8 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                 }
                 fileOutputStream = new FileOutputStream(path + fileName, true);
                 fileOutputStream.write((stringBuilder.toString()).getBytes());
-                return path + fileName;
-            }else{
-                return "";
             }
+                return crashInfo;
         } catch (Exception e) {
             Logger.d("An error occur while writing file...");
         }finally {
@@ -186,6 +203,29 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                 Logger.e(e.getMessage());
             }
         }
-        return "";
+        return crashInfo;
+    }
+
+    private void reportCrash(CrashInfo crashInfo){
+        HttpMaster.post(Constant.url.log_crash)
+                .param("model", crashInfo.getModel())
+                .param("fwVersion", crashInfo.getFwVersion())
+                .param("mac", crashInfo.getMac())
+                .param("packageName", crashInfo.getPackageName())
+                .param("versionName", crashInfo.getVersionName())
+                .param("versionCode", crashInfo.getVersionCode())
+                .param("crashTime", crashInfo.getCrashTime())
+                .param("content", crashInfo.getContent())
+                .enqueue(new StringListener() {
+                    @Override
+                    public void onSuccess(String s) throws Exception {
+                        Logger.d(s);
+                    }
+
+                    @Override
+                    public void onFailure(String e) {
+                        Logger.d(e);
+                    }
+                });
     }
 }
