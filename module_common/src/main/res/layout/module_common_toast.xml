@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:padding="8dp"
-    android:background="@drawable/c_bg_toast"
+    android:background="@drawable/module_common_bg_toast"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/tvToast"
-        android:drawableLeft="@drawable/c_ic_smile_face"
+        android:drawableLeft="@drawable/module_common_ic_smile_face"
         tools:text="teststeste23423423432432234st"
         android:textSize="18sp"
         android:gravity="center"

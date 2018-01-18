@@ -9,10 +9,10 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.px.common.constant.Constant;
+import com.px.common.constant.F;
 import com.px.common.http.HttpMaster;
 import com.px.common.http.listener.StringListener;
-import com.px.common.utils.CommonApplication;
+import com.px.common.constant.CommonApplication;
 import com.px.common.utils.Logger;
 import com.px.common.utils.SPUtil;
 import com.px.common.utils.SysUtil;
@@ -207,7 +207,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
 
     private void reportCrash(CrashInfo crashInfo){
-        HttpMaster.post(Constant.url.log_crash)
+        HttpMaster.post(F.url.log_crash)
                 .param("model", crashInfo.getModel())
                 .param("fwVersion", crashInfo.getFwVersion())
                 .param("mac", crashInfo.getMac())

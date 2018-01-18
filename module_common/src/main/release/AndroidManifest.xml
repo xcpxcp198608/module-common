@@ -3,8 +3,7 @@
     package="com.px.common">
 
     <application
-        android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"/>
+        android:theme="@style/module_common_AppTheme">
     </application>
 
 </manifest>

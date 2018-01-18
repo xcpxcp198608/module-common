@@ -55,6 +55,8 @@ android {
     dataBinding {
         enabled = true
     }
+
+    resourcePrefix "module_common_"
 }
 
 dependencies {
@@ -93,10 +95,6 @@ dependencies {
     //ARouter
     compile 'com.alibaba:arouter-api:1.1.1'
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.2'
-    //leakcanary
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
     //apache
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
 }

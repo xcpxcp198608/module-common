@@ -5,7 +5,7 @@ package com.px.common.constant;
  * create time : 11:23 PM
  */
 
-public final class Constant {
+public final class F {
 
     public static final class url{
 //        public static final String log_crash = "http://192.168.1.131:8000/log/crash/";

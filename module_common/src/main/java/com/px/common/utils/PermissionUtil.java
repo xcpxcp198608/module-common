@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
+import com.px.common.constant.CommonApplication;
+
 /**
  * Created by patrick on 24/07/2017.
  * create time : 5:59 PM

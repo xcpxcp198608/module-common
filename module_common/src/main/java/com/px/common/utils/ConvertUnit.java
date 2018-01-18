@@ -1,7 +1,8 @@
 package com.px.common.utils;
 
-import android.content.Context;
 import android.util.TypedValue;
+
+import com.px.common.constant.CommonApplication;
 
 /**
  * convert unit

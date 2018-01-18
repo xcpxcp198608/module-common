@@ -1,5 +1,7 @@
 package com.px.common.utils;
 
+import com.px.common.constant.CommonApplication;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.math.BigInteger;

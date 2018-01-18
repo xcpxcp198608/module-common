@@ -9,12 +9,12 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:icon="@mipmap/module_common_ic_launcher"
+        android:label="@string/module_common_app_name"
         android:supportsRtl="true"
         android:name="debug.ModuleApplication"
-        android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        android:theme="@style/module_common_AppTheme">
+        <activity android:name="debug.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

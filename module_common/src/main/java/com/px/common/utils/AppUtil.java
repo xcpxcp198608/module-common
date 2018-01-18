@@ -10,8 +10,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
+
+import com.px.common.constant.CommonApplication;
 
 import java.io.File;
 

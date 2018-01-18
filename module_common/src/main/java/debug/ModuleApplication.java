@@ -1,6 +1,6 @@
 package debug;
 
-import com.px.common.utils.CommonApplication;
+import com.px.common.constant.CommonApplication;
 
 /**
  * Created by patrick on 04/07/2017.

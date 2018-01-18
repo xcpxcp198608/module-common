@@ -3,6 +3,8 @@ package com.px.common.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.px.common.constant.CommonApplication;
+
 import java.util.Map;
 
 /**

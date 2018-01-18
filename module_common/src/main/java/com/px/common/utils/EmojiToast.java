@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.px.common.R;
+import com.px.common.constant.CommonApplication;
 
 
 /**
@@ -30,14 +31,14 @@ public class EmojiToast {
 
     private static void realShow(String message ,int emoji, boolean isLong){
         Context context = CommonApplication.context;
-        View toastView = LayoutInflater.from(context).inflate(R.layout.c_toast , null);
+        View toastView = LayoutInflater.from(context).inflate(R.layout.module_common_toast, null);
         TextView textView = toastView.findViewById(R.id.tvToast);
         textView.setText(message);
         Drawable drawable;
         if(emoji == EMOJI_SAD){
-            drawable = context.getResources().getDrawable(R.drawable.c_ic_sad_face);
+            drawable = context.getResources().getDrawable(R.drawable.module_common_ic_sad_face);
         }else{
-            drawable = context.getResources().getDrawable(R.drawable.c_ic_smile_face);
+            drawable = context.getResources().getDrawable(R.drawable.module_common_ic_smile_face);
         }
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         textView.setCompoundDrawables(drawable,null, null, null);

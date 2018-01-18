@@ -2,12 +2,6 @@ package com.px.common.http.listener;
 
 
 import com.google.gson.Gson;
-import com.px.common.UpdateInfo;
-import com.px.common.utils.Logger;
-
-import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;

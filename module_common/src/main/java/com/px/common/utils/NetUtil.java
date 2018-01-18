@@ -6,6 +6,8 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 
+import com.px.common.constant.CommonApplication;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
