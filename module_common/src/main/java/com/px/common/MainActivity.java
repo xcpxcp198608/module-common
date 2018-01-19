@@ -1,4 +1,4 @@
-package debug;
+package com.px.common;
 
 import android.Manifest;
 import android.app.Activity;
@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.px.common.R;
 import com.px.common.databinding.ModuleCommonActivityMainBinding;
 import com.px.common.utils.Logger;
 import com.px.common.utils.RxBus;
@@ -39,6 +38,15 @@ public class MainActivity extends AppCompatActivity {
 
     public class OnEventListener{
         public void onClick(View view) {
+            if(R.id.btStart == view.getId()){
+                Logger.d("");
+            }else if(R.id.btUpload == view.getId()){
+                verifyStoragePermissions(MainActivity.this);
+            }else if(R.id.btReport == view.getId()){
+                Logger.d("");
+            }else{
+                Logger.d("");
+            }
         }
     }
 

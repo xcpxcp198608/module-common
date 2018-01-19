@@ -1,4 +1,4 @@
-package debug;
+package com.px.common;
 
 /**
  * Created by patrick on 15/09/2017.

@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:name="debug.ModuleApplication"
         android:theme="@style/module_common_AppTheme">
-        <activity android:name="debug.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

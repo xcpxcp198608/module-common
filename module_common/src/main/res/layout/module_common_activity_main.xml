@@ -4,13 +4,12 @@
     <data>
         <variable
             name="onEvent"
-            type="debug.MainActivity.OnEventListener"/>
+            type="com.px.common.MainActivity.OnEventListener"/>
     </data>
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="debug.MainActivity">
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/btStart"
