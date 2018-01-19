@@ -39,15 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
     public class OnEventListener{
         public void onClick(View view) {
-            switch (view.getId()){
-                case R.id.btStart:
-                    break;
-                case R.id.btUpload:
-                    verifyStoragePermissions(MainActivity.this);
-                    break;
-                case R.id.btReport:
-                    break;
-            }
         }
     }
 

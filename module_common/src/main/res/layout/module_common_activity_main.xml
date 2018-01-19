@@ -10,7 +10,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.px.common.debug.MainActivity">
+    tools:context="debug.MainActivity">
 
     <Button
         android:id="@+id/btStart"
