@@ -99,7 +99,7 @@ public abstract class BaseRecycleAdapter<VH extends RecyclerView.ViewHolder> ext
         return getItemCounts();
     }
 
-    interface OnItemClickListener{
+    public interface OnItemClickListener{
         void onItemClick(View view, int position);
     }
 
@@ -107,7 +107,7 @@ public abstract class BaseRecycleAdapter<VH extends RecyclerView.ViewHolder> ext
         this.onItemClickListener = onItemClickListener;
     }
 
-    interface OnItemLongClickListener{
+    public interface OnItemLongClickListener{
         void onItemLongClick(View view, int position);
     }
 
@@ -115,7 +115,7 @@ public abstract class BaseRecycleAdapter<VH extends RecyclerView.ViewHolder> ext
         this.onItemLongClickListener = onItemLongClickListener;
     }
 
-    interface OnItemFocusListener{
+    public interface OnItemFocusListener{
         void onFocus(View view, int position, boolean hasFocus);
     }
 
