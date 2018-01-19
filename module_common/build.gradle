@@ -60,41 +60,41 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:design:26.1.0'
-    compile 'com.android.support:recyclerview-v7:26.1.0'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
 
     //gson
-    compile 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.google.code.gson:gson:2.8.0'
     //okhttp
-    compile 'com.squareup.okhttp3:okhttp:3.9.0'
-    compile 'com.squareup.okio:okio:1.13.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.9.0'
+    implementation 'com.squareup.okio:okio:1.13.0'
     //retrofit
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-scalars:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
-    compile 'com.squareup.retrofit2:retrofit-converters:2.3.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    implementation 'com.squareup.retrofit2:retrofit-converters:2.3.0'
     //glide
-    compile ('com.github.bumptech.glide:glide:4.2.0'){
+    implementation ('com.github.bumptech.glide:glide:4.2.0'){
         exclude group: 'com.android.support', module:'support-annotations'
     }
     //rx java2
-    compile 'io.reactivex.rxjava2:rxjava:2.0.5'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.0.5'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     //dagger2
-    compile 'com.google.dagger:dagger:2.4'
+    implementation 'com.google.dagger:dagger:2.4'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.4'
-    compile 'org.glassfish:javax.annotation:10.0-b28'
+    implementation 'org.glassfish:javax.annotation:10.0-b28'
     //ARouter
-    compile 'com.alibaba:arouter-api:1.1.1'
+    implementation 'com.alibaba:arouter-api:1.1.1'
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.2'
     //apache
-    compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.5'
 }
