@@ -115,4 +115,17 @@ public class FileUtil {
             return false;
         }
     }
+
+    /**
+     * 列出目录下所有文件
+     * @param path 目录路径
+     * @return 所有文件数组
+     */
+    public static File[] listFiles(String path){
+        File file = new File(path);
+        if(!file.exists()){
+            return null;
+        }
+        return file.listFiles();
+    }
 }

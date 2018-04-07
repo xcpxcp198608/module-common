@@ -32,13 +32,21 @@ public class TimeUtil {
     }
 
     /**
-     * get current time string
+     * get current string time
      * @return current time string (format: "yyyy-MM-dd HH:mm:ss")
      */
     public static String getStringTime(){
+        return getStringTime(System.currentTimeMillis());
+    }
+
+    /**
+     * get string time from unix timestamp
+     * @return current time string (format: "yyyy-MM-dd HH:mm:ss")
+     */
+    public static String getStringTime(long time){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
                 new Locale("en"));
-        return simpleDateFormat.format(new Date(System.currentTimeMillis()));
+        return simpleDateFormat.format(new Date(time));
     }
     /**
      * get current time string
