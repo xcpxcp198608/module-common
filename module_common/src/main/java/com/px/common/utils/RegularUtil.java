@@ -15,4 +15,16 @@ public class RegularUtil {
         Pattern pattern = Pattern.compile(regular);
         return pattern.matcher(email).matches();
     }
+
+    /**
+     * validate IP address input format
+     */
+    private boolean validateIP(String ip){
+        String pattern = "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\."
+                +"(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
+                +"(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
+                +"(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$";
+        Pattern compile = Pattern.compile(pattern);
+        return compile.matcher(ip).matches();
+    }
 }
