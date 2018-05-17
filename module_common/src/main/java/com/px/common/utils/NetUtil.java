@@ -11,12 +11,20 @@ import com.px.common.constant.CommonApplication;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 
 /**
  * network utils
  */
 
 public class NetUtil {
+
+    public static final int NET_TYPE_DISCONNECT = 0;
+    public static final int NET_TYPE_WIFI = 1;
+    public static final int NET_TYPE_ETHERNET = 3;
 
     /**
      * 判断当前是否有网络连接
@@ -139,6 +147,30 @@ public class NetUtil {
                 ((i >> 8 ) & 0xFF) + "." +
                 ((i >> 16 ) & 0xFF) + "." +
                 ( i >> 24 & 0xFF) ;
+    }
+
+    public static String getEthernetIP() {
+        String ipAddress;
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface
+                    .getNetworkInterfaces(); en.hasMoreElements();) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf
+                        .getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        ipAddress = inetAddress.getHostAddress().toString();
+                        if(!ipAddress.contains("::"))
+                            return inetAddress.getHostAddress().toString();
+                    }else
+                        continue;
+                }
+            }
+        } catch (SocketException ex) {
+            Logger.e(ex.getMessage());
+            return "";
+        }
+        return "";
     }
 
 }

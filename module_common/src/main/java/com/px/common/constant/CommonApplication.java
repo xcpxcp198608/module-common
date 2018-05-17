@@ -15,18 +15,26 @@ public class CommonApplication extends Application {
 
     public static Context context;
 
+    private boolean isDebug = false;
+    private boolean handleCrash = true;
+
     @Override
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
         Logger.init("----px----");
-        CrashHandler.getInstance().init();
-        boolean isDebug = true;
+        if(handleCrash) {
+            CrashHandler.getInstance().init();
+        }
         if(isDebug) {
             ARouter.openLog();
             ARouter.openDebug();
         }
         ARouter.init(this);
+    }
+
+    public void setHandleCrash(boolean handleCrash) {
+        this.handleCrash = handleCrash;
     }
 
     public static Context getContext() {
