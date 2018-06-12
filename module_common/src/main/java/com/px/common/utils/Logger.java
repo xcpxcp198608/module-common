@@ -7,7 +7,7 @@ import android.util.Log;
  */
 public class Logger {
 
-    private static String tag1;
+    private static String tag1 = "----";
     private static final int V = 1;
     private static final int D = 2;
     private static final int I = 3;
@@ -36,7 +36,13 @@ public class Logger {
     public static void d (String message){
         if(LEVEL <= D){
             StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[3];
-            Log.d(tag1 ,  "----->"+message+ "          "+getInfo(stackTraceElement));
+//            Log.d(tag1 ,  "----->"+message+ "          "+getInfo(stackTraceElement));
+            int max_str_length = 2001 - tag1.length();
+            while (message.length() > max_str_length) {
+                Log.d(tag1, "----->"+message.substring(0, max_str_length)+ "          "+getInfo(stackTraceElement));
+                message = message.substring(max_str_length);
+            }
+            Log.d(tag1, "----->"+message+ "          "+getInfo(stackTraceElement));
         }
     }
 

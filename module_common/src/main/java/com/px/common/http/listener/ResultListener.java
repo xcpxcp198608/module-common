@@ -29,7 +29,7 @@ public abstract class ResultListener<T> extends BaseListener {
                 .map(new Function<String, ResultInfo<T>>() {
                     @Override
                     public ResultInfo<T> apply(String jsonString) throws Exception {
-                        Logger.d(jsonString);
+//                        Logger.d(jsonString);
                         ParameterizedType parameterizedType = getType(ResultInfo.class, mClass);
                         return new Gson().fromJson(jsonString, parameterizedType);
                     }

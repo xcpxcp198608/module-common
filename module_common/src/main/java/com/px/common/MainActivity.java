@@ -11,9 +11,15 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.px.common.databinding.ModuleCommonActivityMainBinding;
+import com.px.common.retrofit.ResultListener;
+import com.px.common.retrofit.RetrofitMaster;
 import com.px.common.utils.Logger;
 import com.px.common.utils.RxBus;
 
+
+import java.util.HashMap;
+
+import javax.xml.transform.Result;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -39,7 +45,20 @@ public class MainActivity extends AppCompatActivity {
     public class OnEventListener{
         public void onClick(View view) {
             if(R.id.btStart == view.getId()){
-                Logger.d("");
+                RetrofitMaster.getInstance("http://ldservice.v1.ldlegacy.com/")
+                        .get("ldservice/bvision/channel_type/2/9B67E88314F416F2092AB8ECA6A7C8EDCCE3D6D85A816E6E6F9F919B2E6C277D", new HashMap<String, String>(), ChannelInfo.class)
+                        .listener(new ResultListener<ChannelInfo>() {
+                            @Override
+                            public void onSuccess(Boolean execute, ChannelInfo channelInfo) {
+                                Logger.d(channelInfo.toString());
+                            }
+
+                            @Override
+                            public void onFailure(int code, String message) {
+                                Logger.d(message);
+                            }
+                        });
+
             }else if(R.id.btUpload == view.getId()){
                 verifyStoragePermissions(MainActivity.this);
             }else if(R.id.btReport == view.getId()){
